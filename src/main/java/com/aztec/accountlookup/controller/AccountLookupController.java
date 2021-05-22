@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 
 @RestController
 @RequestMapping("/v1/accountlookup")
@@ -20,13 +21,16 @@ public class AccountLookupController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/account")
     public ResponseEntity<AccountLookupResponse> lookupBank(
-            @RequestParam(value = "iban", required = true) String iban,
-            @RequestParam(value = "country", required = true) String country,
-            @RequestParam(value = "currency", required = true) String currency) {
+            @RequestParam(value = "iban", required = true) final String iban,
+            @RequestParam(value = "country", required = true) final String country,
+            @RequestParam(value = "currency", required = true) final String currency) {
         log.debug("lookupBank iban: {}, country: {}, currency: {}", iban, country, currency);
 
-        AccountLookupResponse bank = accountLookupRouter.lookupAccount(iban, country, currency);
-
-        return ResponseEntity.ok(bank);
+        try {
+            final AccountLookupResponse account = accountLookupRouter.lookupAccount(iban, country, currency);
+            return ResponseEntity.ok(account);
+        } catch (final HttpClientErrorException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
     }
 }

@@ -44,7 +44,8 @@ resilience4j.circuitbreaker:
             ringBufferSizeInHalfOpenState: 5
             # Exceptions that do not count towards opening the circuit.
             ignoreExceptions:
-              - com.aztec.accountlookup.exception.AccountNotFoundException
+              # Ignore 4xx exceptions.
+              - org.springframework.web.client.HttpClientErrorException
     instances:
         lookupAccount:
             baseConfig: default

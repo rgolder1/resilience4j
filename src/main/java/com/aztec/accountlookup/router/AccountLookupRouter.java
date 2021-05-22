@@ -1,6 +1,5 @@
 package com.aztec.accountlookup.router;
 
-import com.aztec.accountlookup.exception.AccountNotFoundException;
 import com.aztec.accountlookup.service.BankOneAccountLookupService;
 import com.aztec.accountlookup.service.BankTwoAccountLookupService;
 import com.aztec.accountlookup.rest.api.AccountLookupResponse;
@@ -8,6 +7,7 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Slf4j
 @Component
@@ -28,12 +28,10 @@ public class AccountLookupRouter {
     }
 
     /**
-     * Fallback method for a NOT FOUND exception, just percolate the exception back.
-     *
-     * Does not count towards opening the circuit.
+     * Fallback method for 4xx exceptions, just percolate the exception back.
      */
-    private AccountLookupResponse lookupAccountFallback(final String iban, final String country, final String currency, final AccountNotFoundException e) {
-        log.debug("Account lookup request resulted in a Not Found.");
+    private AccountLookupResponse lookupAccountFallback(final String iban, final String country, final String currency, final HttpClientErrorException e) {
+        log.debug("Account lookup request resulted in a client exception with status {}", e.getStatusCode());
         throw e;
     }
 

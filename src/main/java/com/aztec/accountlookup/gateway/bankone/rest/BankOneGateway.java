@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,11 +18,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.springframework.http.HttpMethod.GET;
 
+@Slf4j
 @Component
 public class BankOneGateway {
 
@@ -61,6 +64,10 @@ public class BankOneGateway {
 
             ResponseEntity<BankOneAccountResponse> response = restTemplate.exchange(uri, GET, new HttpEntity<>(headers()), BankOneAccountResponse.class);
             return response.getBody();
+        } catch (HttpClientErrorException e) {
+            // Covers 4xx exceptions.
+             log.error("HttpClientErrorException exception thrown in Bank One.", e);
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException(String.format("Error searching Bank One for account [%s, %s]", iban, country), e);
         }

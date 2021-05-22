@@ -1,6 +1,5 @@
 package com.aztec.accountlookup.service;
 
-import com.aztec.accountlookup.exception.AccountNotFoundException;
 import com.aztec.accountlookup.gateway.bankone.rest.BankOneAccountResponse;
 import com.aztec.accountlookup.gateway.bankone.rest.BankOneGateway;
 import com.aztec.accountlookup.rest.api.AccountLookupResponse;
