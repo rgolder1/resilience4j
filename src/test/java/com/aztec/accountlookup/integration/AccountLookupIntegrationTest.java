@@ -35,11 +35,10 @@ public class AccountLookupIntegrationTest {
     private static String COUNTRY = "UK";
     private static String CURRENCY = "GBP";
 
-    private static final String BANK_ONE_NAME = "BANK ONE";
-    private static final String BANK_ONE_ROUTING_NUMBER = "1111111111";
+    private static final String ROUTING_NUMBER = "1233567890";
 
+    private static final String BANK_ONE_NAME = "BANK ONE";
     private static final String BANK_TWO_NAME = "BANK TWO";
-    private static final String BANK_TWO_ROUTING_NUMBER = "2222222222";
 
     @Autowired
     private CircuitBreakerRegistry registry;
@@ -61,8 +60,8 @@ public class AccountLookupIntegrationTest {
         ResponseEntity<AccountLookupResponse> response = callLookupAccount(IBAN, COUNTRY, CURRENCY);
 
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
-        assertThat(response.getBody().getBankName(), equalTo(BANK_ONE_NAME));
-        assertThat(response.getBody().getRoutingNumber(), equalTo(BANK_ONE_ROUTING_NUMBER));
+        assertThat(response.getBody().getAccountLookupProvider(), equalTo(BANK_ONE_NAME));
+        assertThat(response.getBody().getRoutingNumber(), equalTo(ROUTING_NUMBER));
     }
 
     /**
@@ -91,8 +90,8 @@ public class AccountLookupIntegrationTest {
         ResponseEntity<AccountLookupResponse> response = callLookupAccount(IBAN, COUNTRY, CURRENCY);
 
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
-        assertThat(response.getBody().getBankName(), equalTo(BANK_TWO_NAME));
-        assertThat(response.getBody().getRoutingNumber(), equalTo(BANK_TWO_ROUTING_NUMBER));
+        assertThat(response.getBody().getAccountLookupProvider(), equalTo(BANK_TWO_NAME));
+        assertThat(response.getBody().getRoutingNumber(), equalTo(ROUTING_NUMBER));
     }
 
     /**
@@ -141,7 +140,7 @@ public class AccountLookupIntegrationTest {
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withStatus(200)
-                        .withBody("{\"bankName\": \""+ BANK_ONE_NAME +"\", \"iban\": \""+iban+"\", \"routingNumber\": \""+BANK_ONE_ROUTING_NUMBER+"\"}")));
+                        .withBody("{\"accountLookupProvider\": \""+ BANK_ONE_NAME +"\", \"iban\": \""+iban+"\", \"routingNumber\": \""+ROUTING_NUMBER+"\"}")));
     }
 
     private static void primeBankTwoForSuccess(String iban, String country, String currency) {
@@ -149,6 +148,6 @@ public class AccountLookupIntegrationTest {
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withStatus(200)
-                        .withBody("{\"bankName\": \""+ BANK_TWO_NAME +"\", \"iban\": \""+iban+"\", \"routingNumber\": \""+BANK_TWO_ROUTING_NUMBER+"\"}")));
+                        .withBody("{\"accountLookupProvider\": \""+ BANK_TWO_NAME +"\", \"iban\": \""+iban+"\", \"routingNumber\": \""+ROUTING_NUMBER+"\"}")));
     }
 }

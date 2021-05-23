@@ -14,5 +14,5 @@ public class BankOneAccountResponse {
 
     private String routingNumber;
 
-    private String bankName;
+    private String accountLookupProvider;
 }

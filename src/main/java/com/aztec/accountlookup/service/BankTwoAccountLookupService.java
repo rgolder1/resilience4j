@@ -15,7 +15,7 @@ public class BankTwoAccountLookupService {
     public AccountLookupResponse lookupAccount(final String iban, final String country, final String currency) {
         final BankTwoAccountResponse response = gateway.accountLookup(iban, country, currency);
         return AccountLookupResponse.builder()
-                .bankName(response.getBankName())
+                .accountLookupProvider(response.getAccountLookupProvider())
                 .iban(response.getIban())
                 .routingNumber(response.getRoutingNumber())
                 .build();
