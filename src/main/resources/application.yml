@@ -37,9 +37,9 @@ resilience4j.circuitbreaker:
             # Failure rate threshold percentage
             failureRateThreshold: 10
             # Minimum number of call attempts before rate threshold percentage is checked.
-            ringBufferSizeInClosedState: 3
+            ringBufferSizeInClosedState: 10
             # How long to wait until switching to half open.
-            waitDurationInOpenState: 5s
+            waitDurationInOpenState: 3s
             # Number of successful requests before moving back to closed from half open.
             ringBufferSizeInHalfOpenState: 5
             # Exceptions that do not count towards opening the circuit.
